@@ -1,0 +1,75 @@
+.dropdown {
+  &__btn {
+    position: relative;
+    padding-top: @item-padding;
+    padding-bottom: @item-padding;
+    padding-inline: @item-padding (@icon-size + (@item-padding * 2));
+    line-height: @body-line-height;
+    text-align: start;
+    background-color: @item-color;
+    color: @item-color-inverted;
+
+    .no-touch &:not(.is-disabled):not([aria-expanded="true"]):hover,
+    html:not(.a11y-disable-focusoutline) &:focus-visible {
+      background-color: @item-color-hover;
+      color: @item-color-inverted-hover;
+      .transition(background-color @duration ease-in, color @duration ease-in;);
+    }
+  }
+
+  &__btn.is-disabled {
+    background-color: @disabled;
+    color: @disabled-inverted;
+  }
+
+  &__btn[aria-expanded="true"] {
+    background-color: @item-color-selected;
+    color: @item-color-inverted-selected;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    right: @item-padding;
+    .transform(translateY(-50%));
+
+    .dir-rtl & {
+      right: inherit;
+      left: @item-padding;
+    }
+  }
+}
+
+.dropdown__list {
+  border: 0.19rem solid @item-color-selected;
+}
+
+.dropdown-item {
+  padding: @item-padding;
+  background-color: @item-color;
+  border-bottom: 1px solid @item-color-hover;
+  color: @item-color-inverted;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .no-touch &:not(:focus-visible):hover,
+  .dropdown__btn.is-selected + .dropdown__list &[aria-selected="true"]:hover {
+    background-color: @item-color-hover;
+    color: @item-color-inverted-hover;
+    .transition(background-color @duration ease-in, color @duration ease-in;);
+  }
+
+  &:focus-visible,
+  .dropdown__btn.is-selected + .dropdown__list &[aria-selected="true"] {
+    // This code can be used to style a non-native dropdown as closely
+    // as possible to the default browser settings
+    // background-color: Highlight;
+    // background-color: -webkit-focus-ring-color;
+    // color: white;
+
+    background-color: @item-color-selected;
+    color: @item-color-inverted-selected;
+  }
+}
