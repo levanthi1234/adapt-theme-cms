@@ -1,58 +1,65 @@
-import Adapt from 'core/js/adapt';
-import ThemePageView from './themePageView';
-import ThemeArticleView from './themeArticleView';
-import ThemeBlockView from './themeBlockView';
-import ThemeComponentView from './themeComponentView';
-import ThemeView from './themeView';
+import Adapt from "core/js/adapt";
+import ThemePageView from "./themePageView";
+import ThemeArticleView from "./themeArticleView";
+import ThemeBlockView from "./themeBlockView";
+import ThemeComponentView from "./themeComponentView";
+import ThemeView from "./themeView";
 
 class Theme extends Backbone.Controller {
-
   initialize() {
     this.listenTo(Adapt, {
-      'app:dataReady': this.onDataReady,
-      'pageView:postRender articleView:postRender blockView:postRender componentView:postRender': this.onPostRender
+      "app:dataReady": this.onDataReady,
+      "pageView:postRender articleView:postRender blockView:postRender componentView:postRender":
+        this.onPostRender,
+      "accordionView:onClick": this.onClickAccordion,
     });
   }
 
+  onClickAccordion(view) {
+    const viewModel = view.model;
+    console.log(view, viewModel);
+  }
+
   onDataReady() {
-    $('html').addClass(Adapt.course.get('_courseStyle'));
+    $("html").addClass(Adapt.course.get("_courseStyle"));
     this.addFavIcon();
   }
 
   addFavIcon() {
-    const theme = Adapt.course.get('_theme-cms');
+    const theme = Adapt.course.get("_theme-cms");
     if (!theme?._favIcon?._src) return;
-    const $linkStandard = $(`<link rel="icon" href="${theme._favIcon._src}" size="192x192" />`);
-    const $linkApple = $(`<link rel="apple-touch-icon" href="${theme._favIcon._src}" />`);
-    $('head')
-      .append($linkStandard)
-      .append($linkApple);
+    const $linkStandard = $(
+      `<link rel="icon" href="${theme._favIcon._src}" size="192x192" />`
+    );
+    const $linkApple = $(
+      `<link rel="apple-touch-icon" href="${theme._favIcon._src}" />`
+    );
+    $("head").append($linkStandard).append($linkApple);
   }
 
   onPostRender(view) {
     const viewModel = view.model;
-    const theme = viewModel.get('_theme-cms');
+    const theme = viewModel.get("_theme-cms");
     if (!theme) return;
     const model = new Backbone.Model(theme);
     const el = view.$el;
-    switch (viewModel.get('_type')) {
-      case 'page':
+    switch (viewModel.get("_type")) {
+      case "page":
         new ThemePageView({ model, el });
         break;
-      case 'article':
+      case "article":
         new ThemeArticleView({ model, el });
         break;
-      case 'block':
+      case "block":
         new ThemeBlockView({ model, el });
         break;
-      case 'component':
+      case "component":
         new ThemeComponentView({ model, el });
         break;
       default:
         new ThemeView({ model, el });
     }
   }
-
 }
 
 export default new Theme();
